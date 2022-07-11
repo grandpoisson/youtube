@@ -1,22 +1,23 @@
+import Head from 'next/head'
 import Link from 'next/link'
 import prisma from 'lib/prisma'
 import { getVideo, getVideos } from 'lib/data.js'
 import timeago from 'lib/timeago'
 import ReactPlayer from 'react-player'
 import Video from 'components/Video'
+import Heading from 'components/Heading'
 
 export default function SingleVideo({ video, videos }) {
   if (!video) return <p className='text-center p-5'>Video does not exist 😞</p>
 
   return (
     <>
-      <header className='h-14 flex pt-5 px-5 pb-2'>
-        <Link href={`/`}>
-          <a className='underline'>Home</a>
-        </Link>
-
-        <div className='grow'></div>
-      </header>
+      <Head>
+        <title>{video.title}</title>
+        <meta name='description' content={video.title} />
+        <link rel='icon' href='/favicon.ico' />
+      </Head>
+      <Heading />
 
       <div className='h-screen flex'>
         <div className='flex w-full md:w-2/3 flex-col mb-4 border-t border-r border-b border-3 border-black pl-0 bg-black'>
