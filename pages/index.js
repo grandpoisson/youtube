@@ -1,11 +1,17 @@
+import { useState } from 'react'
 import Head from 'next/head'
-import Image from 'next/image'
-import { getVideos } from 'lib/data.js'
+
 import prisma from 'lib/prisma'
+import { getVideos } from 'lib/data.js'
+import { amount } from 'lib/config'
+
 import Videos from 'components/Videos'
 import Heading from 'components/Heading'
+import LoadMore from 'components/LoadMore'
 
-export default function Home({ videos }) {
+export default function Home({ initialVideos }) {
+  const [videos, setVideos] = useState(initialVideos)
+  const [reachedEnd, setReachedEnd] = useState(initialVideos.length < amount)
   return (
     <div>
       <Head>
@@ -19,6 +25,13 @@ export default function Home({ videos }) {
         <p className='flex justify-center mt-20'>No videos found!</p>
       )}
       <Videos videos={videos} />
+      {!reachedEnd && (
+        <LoadMore 
+          videos={videos} 
+          setVideos={setVideos}
+          setReachedEnd={setReachedEnd}
+        />
+      )}
     </div>
   )
 }
@@ -29,7 +42,7 @@ export async function getServerSideProps() {
 
   return {
     props: {
-      videos,
+      initialVideos: videos,
     },
   }
 }
