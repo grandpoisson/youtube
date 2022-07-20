@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import prisma from 'lib/prisma'
@@ -9,6 +10,21 @@ import Heading from 'components/Heading'
 
 export default function SingleVideo({ video, videos }) {
   if (!video) return <p className='text-center p-5'>Video does not exist 😞</p>
+
+  useEffect( () => {
+    const incrementViews = async () => {
+      await fetch('/api/view', {
+        body: JSON.stringify({
+          video: video.id,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      })
+    }
+    incrementViews()
+  }, [])
 
   return (
     <>
@@ -38,7 +54,7 @@ export default function SingleVideo({ video, videos }) {
                 <p className='text-2xl font-bold '>{video.title}</p>
 
                 <div className='text-gray-400'>
-                  {video.views} views ·{' '}
+                  {video.views + 1} views ·{' '}
                   {timeago.format(new Date(video.createdAt))}
                 </div>
               </div>
